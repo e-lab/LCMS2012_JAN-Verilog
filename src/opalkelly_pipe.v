@@ -35,6 +35,7 @@ module opalkelly_pipe
     output reg      sys_rx_valid,
     output [15:0]   sys_rx,
 
+    output [15:0]   sys_in_available,
     output          sys_tx_ready,
     input           sys_tx_valid,
     input  [15:0]   sys_tx);
@@ -102,7 +103,10 @@ module opalkelly_pipe
         if (0 != RX_ADDR_WIDTH) begin : RX_ACTIVE_
 
             wire                    sys_rx_in_empty;
+            wire [RX_ADDR_WIDTH:0]  sys_rx_in_count;
             wire [RX_ADDR_WIDTH:0]  ti_rx_in_count;
+
+            assign sys_in_available = {RX_ADDR_WIDTH{1'b1}} - sys_rx_in_count;
 
             assign ti_in_available = {RX_ADDR_WIDTH{1'b1}} - ti_rx_in_count;
 
@@ -129,7 +133,7 @@ module opalkelly_pipe
                 .pop_data       (sys_rx),
                 .pop_empty      (sys_rx_in_empty),
                 .pop_empty_a    (),
-                .pop_count      (),
+                .pop_count      (sys_rx_in_count),
 
                 .push_clk       (ti_clk),
                 .push_rst       (ti_rst),
@@ -142,6 +146,8 @@ module opalkelly_pipe
 
         end
         else begin : RX_INACTIVE_
+
+            assign sys_in_available = 'b0
 
             assign ti_in_available  = 'b0;
 
