@@ -483,6 +483,7 @@ module LCMS2012_project #(
         .sys_rst            (dac_sm_rst),
 
        .sys_rx_ready       (dac_rx_ready),
+		 .sys_in_available	(dac_in_available),
        .sys_rx_valid       (dac_rx_valid),
        .sys_rx             (dac_rx) );
 
@@ -604,7 +605,7 @@ module LCMS2012_project #(
                     if (dac_rx_valid) begin  //if the pipe in has valid data
                         VCMD[15:0] <= dac_rx[15:0];
                     end
-                    if (ti_in_available == ((2**MEM_ADDR_WIDTH[31:0])-1)) begin  //(2^MEM_ADDR_WIDTH)-1, 1023 for 10 bits)
+                    if (dac_in_available == ((2**MEM_ADDR_WIDTH[31:0])-1)) begin  //(2^MEM_ADDR_WIDTH)-1, 1023 for 10 bits)
                         measurement_in_progress_dac <= 1'b0;
                         dac_state <= s_1;
                     end

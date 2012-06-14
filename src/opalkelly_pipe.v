@@ -147,7 +147,7 @@ module opalkelly_pipe
         end
         else begin : RX_INACTIVE_
 
-            assign sys_in_available = 'b0
+            assign sys_in_available = 'b0;
 
             assign ti_in_available  = 'b0;
 
