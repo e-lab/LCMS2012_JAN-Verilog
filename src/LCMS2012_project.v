@@ -133,10 +133,11 @@ module LCMS2012_project #(
     wire        ti_rst;
 
     //for pipe in and out
+    wire [15:0] dac_in_available;
     reg         dac_rx_ready;
     wire        dac_rx_valid;
     wire [15:0] dac_rx;
-    reg [15:0]  VCMD;
+    reg  [15:0] VCMD;
 
     wire        adc_tx_ready;
     reg         adc_tx_valid;
@@ -482,10 +483,10 @@ module LCMS2012_project #(
         .sys_clk            (dac_sm_clk),
         .sys_rst            (dac_sm_rst),
 
-       .sys_rx_ready       (dac_rx_ready),
-		 .sys_in_available	(dac_in_available),
-       .sys_rx_valid       (dac_rx_valid),
-       .sys_rx             (dac_rx) );
+        .sys_in_available   (dac_in_available),
+        .sys_rx_ready       (dac_rx_ready),
+        .sys_rx_valid       (dac_rx_valid),
+        .sys_rx             (dac_rx) );
 
     signal_sync
     measurement_in_progress_dac_adc_sync ( // for crossing clock domains
@@ -606,6 +607,7 @@ module LCMS2012_project #(
                         VCMD[15:0] <= dac_rx[15:0];
                     end
                     if (dac_in_available == ((2**MEM_ADDR_WIDTH[31:0])-1)) begin  //(2^MEM_ADDR_WIDTH)-1, 1023 for 10 bits)
+                        // profile buffer run dry
                         measurement_in_progress_dac <= 1'b0;
                         dac_state <= s_1;
                     end
