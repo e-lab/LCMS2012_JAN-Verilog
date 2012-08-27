@@ -47,7 +47,7 @@ module reset_generator_tb;
  	initial begin
 	
 	
-		// Initialize Inputs
+		// Initialize Inputs first low 98us and high 2us
 		clk = 0;
 		reset = 1;
 		low_time = 98;
@@ -56,20 +56,26 @@ module reset_generator_tb;
 		// Wait 1000 ns for global reset to finish
 		#1000;
 		reset = 0;
-        
-		// Add stimulus here
-		#1000000;
-		high_time = 0;
+		#1000000;  
+
+		//test never reset
+		low_time = 0;
+		high_time =65535;
+		#1000000;  
+
+		//test always reset
 		low_time = 100;
+		high_time = 0;
 		#1000000;
 		
+		//back to 100 us
 		low_time = 98;
 		high_time = 2;
 		#1000000;
 		
-		//test always reset
-		low_time = 100;
-		high_time = 0;
+
+		
+
 	end
       
 endmodule

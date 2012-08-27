@@ -33,6 +33,7 @@ reg [0:1] state;
 parameter s_latch = 2'b00;
 parameter s_high = 2'b01;
 parameter s_low = 2'b10;
+//parameter s_never_reset = 2'b11;
 
 reg[15:0] low_time_counter;
 reg[15:0] high_time_counter;
@@ -67,6 +68,10 @@ assign RESET_OUT = rout;
 								state <= s_high;
 								rout <= 1;  //rout high during latch, is this ok???
 								high_time_counter <= 16'b0000000000000001;
+								if (high_time[0:15] == 16'b1111111111111111) begin //special case to never reset
+									rout <=0;
+									state <= s_latch; // stay here until the high_time input changes 
+								end
 							end
 								
 				s_high:	begin
